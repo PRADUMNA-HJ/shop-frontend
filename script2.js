@@ -240,8 +240,20 @@ function logout() {
 // ======================================================
 
 function placeOrder() {
+  // Check if user is logged in
+  let user = JSON.parse(localStorage.getItem("user"));
+  if (!user) {
+    alert("Please login before placing an order!");
+    window.location.href = "login.html";
+    return;
+  }
+
   let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if (cart.length === 0) return alert("Cart is empty!");
+
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
 
   let orders = JSON.parse(localStorage.getItem("orders") || "[]");
 
@@ -249,7 +261,7 @@ function placeOrder() {
     orders.push({
       name: item.name,
       price: item.price,
-      quantity: item.quantity,
+      quantity: item.quantity || 1,
       orderDate: new Date().toISOString()
     });
   });
@@ -257,9 +269,10 @@ function placeOrder() {
   localStorage.setItem("orders", JSON.stringify(orders));
   localStorage.removeItem("cart");
 
-  alert("Order placed!");
-  location.href = "orders.html";
+  alert("Order Placed Successfully!");
+  window.location.href = "orders.html";
 }
+
 
 function renderOrders() {
   const box = document.getElementById("orderList");
