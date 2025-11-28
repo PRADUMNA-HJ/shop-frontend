@@ -2,26 +2,103 @@
 //  HARD CODED PRODUCTS (LOCAL)
 // ======================================================
 const products = [
-  { name: "Wireless Headphones", price: 2999, img: "https://www.belkin.com/...png" },
-  { name: "Smart Watch", price: 6999, img: "https://imoostore.in/...webp" },
-  { name: "Bluetooth Speaker", price: 1499, img: "https://encrypted-tbn0..." },
-  { name: "DSLR Camera(Nikon)", price: 81500, img: "https://encrypted-tbn0..." },
-  { name: "monitor", price: 12798, img: "https://p1-ofp.static.pub/...png" },
-  { name: "Iphone 17 Pro", price: 12798, img: "https://encrypted-tbn1..." },
-  { name: "Bottle", price: 899, img: "https://www.milton.in/...jpg" },
-  { name: "Table", price: 18000, img: "https://encrypted-tbn0..." },
-  { name: "cricket bat", price: 30000, img: "https://encrypted-tbn0..." },
-  { name: "Gaming Keyboard RGB", price: 2499, img: "https://m.media-amazon.com/..." },
-  { name: "Wireless Mouse", price: 899, img: "https://m.media-amazon.com/..." },
-  { name: "4K Smart LED TV", price: 45999, img: "https://encrypted-tbn0..." },
-  { name: "Portable Power Bank", price: 1599, img: "https://encrypted-tbn0..." },
-  { name: "Laptop Backpack", price: 1299, img: "https://encrypted-tbn0..." },
-  { name: "Wireless Earbuds", price: 1999, img: "https://instamart-media..." },
-  { name: "Gaming Chair", price: 8999, img: "https://encrypted-tbn0..." },
-  { name: "VR", price: 35499, img: "https://images-cdn.ubuy.co.in/...jpg" },
-  { name: "Fitness Dumbbells Set", price: 1599, img: "https://www.lifelongindia..." },
-  { name: "Electric Kettle", price: 999, img: "https://encrypted-tbn0..." }
+  {
+    name: "Wireless Headphones",
+    price: 2999,
+    img: "https://www.belkin.com/dw/image/v2/BGBH_PRD/on/demandware.static/-/Sites-master-product-catalog-blk/default/dw90915b20/images/hi-res/9/1993cb53ade24b1f_AUD005btBLK_SoundFormAdaptHeadset_Shot1.jpg?sfrm=png"
+  },
+  {
+    name: "Smart Watch",
+    price: 6999,
+    img: "https://imoostore.in/cdn/shop/files/imoo_Z1_Kids_Smart_Watch_-_Bamboo_Green.webp?v=1762514348&width=600"
+  },
+  {
+    name: "Bluetooth Speaker",
+    price: 1499,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkzm330_QXVLpQJnT6jKW3ixSYYI9Vka9t6Q&s"
+  },
+  {
+    name: "DSLR Camera(Nikon)",
+    price: 81500,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQu3TkWQoKp3yzJcib_DZQ0xwFmZ4kNmrXNQ&s"
+  },
+  {
+    name: "monitor",
+    price: 12798,
+    img: "https://p1-ofp.static.pub/medias/26982916441_T2440_202502101101211739169275078.png?width=400&height=400"
+  },
+  {
+    name: "Iphone 17 Pro",
+    price: 12798,
+    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTlg5HQ9QfKWS2yD_0dtc4_wW6-INweVAnDKXEmHLonultgo-a76qW_9kDJ4LVch3RaoYbgHTTXmRvkgrhlo9xE95h6m7HeA67W4C6S0wpg0oNfZdJZXl1n0Lg1IiScvul53yc&usqp=CAc"
+  },
+  {
+    name: "Bottle",
+    price: 899,
+    img: "https://www.milton.in/cdn/shop/files/breeze_750_blue.jpg?v=1736934801&width=1040"
+  },
+  {
+    name: "Table",
+    price: 18000,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQe-vY8iNyzduP-Gw_YRdJpxjvdjbjV6113bg&s"
+  },
+  {
+    name: "cricket bat",
+    price: 30000,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8x_8JWIUOvAz6mhJ6m0WlPVfH65eOjAzJwA&s"
+  },
+  {
+    name: "Gaming Keyboard RGB",
+    price: 2499,
+    img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UF1000,1000_QL80_.jpg"
+  },
+  {
+    name: "Wireless Mouse",
+    price: 899,
+    img: "https://m.media-amazon.com/images/I/61LtuGzXeaL._AC_UF1000,1000_QL80_.jpg"
+  },
+  {
+    name: "4K Smart LED TV",
+    price: 45999,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRElaLEl29A4d1lR_N57p6bYl_tWChrbU2xgA&s"
+  },
+  {
+    name: "Portable Power Bank",
+    price: 1599,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWvKrPAH5tzBXsRce7yIFkBD-qm-o75-oINA&s"
+  },
+  {
+    name: "Laptop Backpack",
+    price: 1299,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZZhyZ41old2OtN1LaKe_D4EVhZ_ns6k5-jg&s"
+  },
+  {
+    name: "Wireless Earbuds",
+    price: 1999,
+    img: "https://instamart-media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,h_600/NI_CATALOG/IMAGES/CIW/2025/8/1/6825f5ff-e528-4b5a-85d9-72952babf307_LHSZ5CF0QK.png"
+  },
+  {
+    name: "Gaming Chair",
+    price: 8999,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZOhp3KPUWu-D4b_Bhd8IJ1DdXwjOQ8y29kw&s"
+  },
+  {
+    name: "VR ",
+    price: 35499,
+    img: "https://images-cdn.ubuy.co.in/64c44c12c0ff597fab77f0a1-oculus-quest-64gb-vr-headset.jpg"
+  },
+  {
+    name: "Fitness Dumbbells Set",
+    price: 1599,
+    img: "https://www.lifelongindiaonline.com/cdn/shop/files/1_88ab00b6-9166-493b-9775-2d90ac286dba.jpg?v=1752144854"
+  },
+  {
+    name: "Electric Kettle",
+    price: 999,
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0BI_9UfxeUGDMuPDfALfDNfzXfVgDFc8TBA&s"
+  }
 ];
+
 
 // ======================================================
 //  BACKEND PRODUCTS
