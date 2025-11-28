@@ -1,0 +1,274 @@
+/* HERO SECTION */
+.hero {
+  height: 70vh;
+  background: linear-gradient(rgba(210, 129, 129, 0.5), rgba(152, 173, 28, 0.5)),
+              url('https://images.unsplash.com/photo-1542291026-7eec264c27ff')
+              center/cover;
+}
+
+/* PRODUCT CARD */
+.product-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e7d7df;
+  box-shadow: 0 2px 10px rgba(150, 226, 139, 0.1);
+  transition: transform .2s, box-shadow .2s;
+
+  border: 5px solid #ff69b4;   /* circular border color */
+  border-radius: 10%;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(219, 102, 102, 0.2);
+}
+
+.product-img {
+  height: 180px;       /* smaller height */
+  width: 100%;
+  object-fit: contain; /* no cropping */
+  background: #7eddcc;
+  padding: 5px;
+}
+
+.products-section {
+  background: linear-gradient(135deg, #fafafa, #eaeaea);
+  padding: 25px 0;
+}
+/* CART ITEM BOX */
+.cart-item {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: 0.2s ease;
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* PRODUCT NAME */
+.cart-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* PRICE STYLE */
+.cart-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+/* TOTAL BOX */
+.cart-total-box {
+  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  padding: 20px;
+  color: white;
+  border-radius: 15px;
+  text-align: right;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* TOTAL LABEL */
+.total-text {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+
+/* -----------------------------------------
+   CART ITEM BOX STYLING
+------------------------------------------ */
+
+.cart-item {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.cart-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* PRODUCT NAME */
+.cart-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+}
+
+/* PRICE TEXT */
+.cart-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #27ae60; /* Green */
+}
+
+/* -----------------------------------------
+   QUANTITY BUTTONS
+------------------------------------------ */
+
+.qty-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg,#4b7bec,#3867d6);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.qty-btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg,#3867d6,#274b9f);
+}
+
+.qty-number {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+/* -----------------------------------------
+   TOTAL PRICE BOX
+------------------------------------------ */
+
+.cart-total-box {
+  background: linear-gradient(135deg, #6dd5ed, #2193b0);
+  padding: 20px;
+  color: white;
+  border-radius: 15px;
+  text-align: right;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.total-text {
+  font-size: 20px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* ============================
+   ORDERS PAGE STYLING
+============================ */
+
+/* ORDER CARD */
+.order-card {
+  background: linear-gradient(135deg, #ffffff, #f2f6ff);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ORDER TITLE */
+.order-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* DELIVERY TAG */
+.delivery-tag {
+  background: linear-gradient(135deg, #6dd5fa, #2980b9);
+  padding: 5px 12px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/* ORDER PRICE */
+.order-price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+/* ORDER BUTTONS */
+.order-btn {
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-right: 6px;
+}
+
+.order-btn:hover {
+  transform: scale(1.07);
+}
+
+/* Cancel */
+.cancel-btn {
+  background: #e74c3c;
+}
+.cancel-btn:hover {
+  background: #c0392b;
+}
+
+/* Refund */
+.refund-btn {
+  background: #f1c40f;
+  color: black;
+}
+.refund-btn:hover {
+  background: #d4ac0d;
+}
+
+/* Exchange */
+.exchange-btn {
+  background: #3498db;
+}
+.exchange-btn:hover {
+  background: #217dbb;
+}
+
+/* NO ORDERS MESSAGE */
+.no-orders-box {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+}
+
+.no-orders-text {
+  font-size: 20px;
+  font-weight: bold;
+  color: #7f8c8d;
+}
+
+.no-orders-sub {
+  font-size: 15px;
+  color: #95a5a6;
+}
+
