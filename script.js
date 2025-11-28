@@ -147,12 +147,47 @@ function renderProducts(containerId) {
   });
 }
 
+// ----------------------- BACKEND PRODUCTS STORAGE ----------------------------
+let backendProducts = [];
+
+// render backend products into any container (used for homepage and products page)
+function renderBackendProducts(containerId, limit = null) {
+  if (!document.getElementById(containerId)) return;
+  const container = document.getElementById(containerId);
+
+  // if container already has content (e.g. hardcoded items), we append backend items
+  let output = "";
+  const list = (limit == null) ? backendProducts : backendProducts.slice(0, limit);
+
+  list.forEach((p, i) => {
+    // index relative to backendProducts
+    const globalIndex = backendProducts.indexOf(p);
+    output += `
+      <div class="col-md-4">
+        <div class="card product-card">
+          <img src="${p.image || p.img || ''}" class="product-img card-img-top" style="height:200px;object-fit:cover">
+          <div class="card-body">
+            <h5 class="fw-bold">${p.name}</h5>
+            <p class="text-success fw-bold">₹ ${p.price}</p>
+            <button class="btn btn-primary w-100" onclick="addBackendToCart(${globalIndex})">
+              Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  // append (do not overwrite) so hardcoded items remain
+  container.innerHTML += output;
+}
+
 // ----------------------- CALL RENDER FUNCTIONS ----------------------------
 
-// Homepage → show only first 3 products
+// Homepage → show only first 3 hardcoded products
 renderProductsLimited("productContainer", 3);
 
-// Products page → show all products
+// Products page → show all hardcoded products
 renderProducts("allProducts");
 
 // ----------------------- CART SYSTEM ----------------------------
@@ -164,6 +199,32 @@ function addToCart(id) {
     existing.quantity = (existing.quantity || 0) + 1;
   } else {
     cart.push({ ...products[id], quantity: 1 });
+  }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert("Added to cart!");
+}
+
+function addBackendToCart(index) {
+  const product = backendProducts[index];
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  let existing = cart.find(item => item.name === product.name);
+
+  if (existing) {
+    existing.quantity = (existing.quantity || 0) + 1;
+  } else {
+    // for backend product, ensure fields name, price, image exist
+    cart.push({
+      name: product.name,
+      price: product.price,
+      image: product.image || product.img || "",
+      quantity: 1
+    });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -202,7 +263,8 @@ function renderCart() {
     `;
   });
 
-  document.getElementById("cartTotal").innerText = total;
+  const totalEl = document.getElementById("cartTotal");
+  if (totalEl) totalEl.innerText = total;
 }
 
 // ----------------------- SIGNUP ----------------------------
@@ -255,6 +317,7 @@ function logout() {
 // ----------------------- CART QUANTITY ----------------------------
 function increaseQty(index) {
   let cart = JSON.parse(localStorage.getItem("cart"));
+  if (!cart || !cart[index]) return;
   cart[index].quantity++;
   localStorage.setItem("cart", JSON.stringify(cart));
   renderCart();
@@ -262,6 +325,7 @@ function increaseQty(index) {
 
 function decreaseQty(index) {
   let cart = JSON.parse(localStorage.getItem("cart"));
+  if (!cart || !cart[index]) return;
 
   if (cart[index].quantity > 1) {
     cart[index].quantity--;
@@ -273,7 +337,18 @@ function decreaseQty(index) {
   renderCart();
 }
 
-// --------------------------- ORDERS ----------------------------------------
+function removeItem(index) {
+  let cart = JSON.parse(localStorage.getItem("cart"));
+  cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  renderCart();
+}
+
+if (window.location.pathname.includes("cart.html")) {
+  renderCart();
+}
+
+//---------------------------orders ----------------------------------------
 function renderOrders() {
   let orders = JSON.parse(localStorage.getItem("orders") || "[]");
   const box = document.getElementById("orderList");
@@ -378,27 +453,25 @@ if (window.location.pathname.includes("orders.html")) {
 // ----------------------- BACKEND URL ----------------------------
 const BASE_URL = "https://shop-backend-ewx9.onrender.com";
 
-// Fetch products from backend & display on home page
+// Fetch products from backend & display on home page and products page
 fetch(`${BASE_URL}/getProducts`)
   .then(res => res.json())
-  .then(products => {
-    let output = "";
+  .then(data => {
+    // store backend products globally
+    backendProducts = Array.isArray(data) ? data : [];
 
-    products.forEach(p => {
-      output += `
-        <div class="col-md-4">
-          <div class="card shadow">
-            <img src="${p.image}" class="card-img-top" height="200">
-            <div class="card-body">
-              <h5 class="card-title">${p.name}</h5>
-              <p class="card-text text-success fw-bold">₹${p.price}</p>
-            </div>
-          </div>
-        </div>
-      `;
-    });
+    // If homepage -> append first 3 backend items
+    if (document.getElementById("productContainer")) {
+      renderBackendProducts("productContainer", 3);
+    }
 
-    document.getElementById("productContainer").innerHTML = output;
+    // If products page -> append all backend items
+    if (document.getElementById("allProducts")) {
+      renderBackendProducts("allProducts");
+    }
+  })
+  .catch(err => {
+    console.error("Error fetching backend products:", err);
   });
 
 // ---------- Add Product --------------
@@ -420,32 +493,10 @@ function addProduct() {
     .then(res => res.json())
     .then(result => {
       alert(result.message || "Product added!");
-    })
-    .catch(err => console.error(err));
-}
-
-// -------- Fetch & Display products on products.html page --------
-if (window.location.pathname.includes("products.html")) {
-  fetch(`${BASE_URL}/getProducts`)
-    .then(res => res.json())
-    .then(products => {
-      let output = "";
-
-      products.forEach(p => {
-        output += `
-          <div class="col-md-4">
-            <div class="card shadow">
-              <img src="${p.image}" class="card-img-top" height="200">
-              <div class="card-body">
-                <h5 class="card-title">${p.name}</h5>
-                <p class="card-text text-success fw-bold">₹${p.price}</p>
-              </div>
-            </div>
-          </div>
-        `;
+      // optionally refresh backendProducts on success
+      return fetch(`${BASE_URL}/getProducts`).then(r => r.json()).then(newData => {
+        backendProducts = Array.isArray(newData) ? newData : [];
       });
-
-      document.getElementById("allProducts").innerHTML = output;
     })
     .catch(err => console.error(err));
 }
