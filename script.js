@@ -109,11 +109,13 @@ let backendProducts = [];
 //  RENDER FUNCTIONS (LOCAL + BACKEND)
 // ======================================================
 
+// ======================================================
+
 // Render Hardcoded Limited (Home Page)
 function renderProductsLimited(containerId, limit) {
   const container = document.getElementById(containerId);
   if (!container) return;
-
+container.innerHTML = "";
   products.slice(0, limit).forEach((p, i) => {
     container.innerHTML += productCardHTML(p, i, "local");
   });
@@ -123,7 +125,7 @@ function renderProductsLimited(containerId, limit) {
 function renderProducts(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
-
+container.innerHTML = "";
   products.forEach((p, i) => {
     container.innerHTML += productCardHTML(p, i, "local");
   });
@@ -133,7 +135,7 @@ function renderProducts(containerId) {
 function renderBackendProducts(containerId, limit = null) {
   const container = document.getElementById(containerId);
   if (!container) return;
-
+container.innerHTML = "";
   const list = limit ? backendProducts.slice(0, limit) : backendProducts;
 
   list.forEach((p, i) => {
@@ -200,6 +202,7 @@ function addToCart(id) {
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
+  if (location.pathname.includes("cart.html")) renderCart();
   alert("Added to cart!");
 }
 
@@ -217,13 +220,14 @@ function addBackendToCart(index) {
   } else {
     cart.push({
       name: product.name,
-      price: product.price,
+      price: Number(product.price),
       img: product.image,
       quantity: 1
     });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
+  if (location.pathname.includes("cart.html")) renderCart();
   alert("Added to cart!");
 }
 
@@ -237,7 +241,7 @@ function renderCart() {
   let total = 0;
 
   cart.forEach((item, index) => {
-    total += item.price * item.quantity;
+    total += Number(item.price) * Number(item.quantity);
 
     cartDiv.innerHTML += `
       <div class="cart-item">
@@ -264,15 +268,17 @@ if (location.pathname.includes("cart.html")) renderCart();
 
 // Qty changes
 function increaseQty(i) {
-  let cart = JSON.parse(localStorage.getItem("cart"));
-  cart[i].quantity++;
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (!cart[i]) return;
+  cart[i].quantity = (cart[i].quantity || 0) + 1;
   localStorage.setItem("cart", JSON.stringify(cart));
   renderCart();
 }
 
 function decreaseQty(i) {
-  let cart = JSON.parse(localStorage.getItem("cart"));
-  if (cart[i].quantity > 1) cart[i].quantity--;
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (!cart[i]) return;
+  if ((cart[i].quantity || 0) > 1) cart[i].quantity--;
   else cart.splice(i, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
   renderCart();
@@ -282,29 +288,84 @@ function decreaseQty(i) {
 //  SIGNUP + LOGIN + LOGOUT + DASHBOARD
 // ======================================================
 
-if (document.getElementById("signupForm")) {
-  signupForm.addEventListener("submit", (e) => {
+/* SIGNUP - safe element lookup */
+/* SIGNUP - post to backend */
+const signupForm = document.getElementById("signupForm");
+if (signupForm) {
+  signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    let name = name.value, email = email.value;
-    localStorage.setItem("user", JSON.stringify({ name, email }));
-    location.href = "dashboard.html";
+    const nameVal = document.getElementById("name")?.value || "";
+    const emailVal = document.getElementById("email")?.value || "";
+    const pass = document.getElementById("password")?.value || "";
+    const cpass = document.getElementById("confirmPassword")?.value || "";
+    const msgEl = document.getElementById("signupMsg");
+
+    if (pass !== cpass) {
+      if (msgEl) msgEl.innerText = "Passwords do not match!";
+      return;
+    }
+
+    try {
+      const res = await fetch(`${BASE_URL}/addUser`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: nameVal, email: emailVal, password: pass })
+      });
+      const data = await res.json();
+      if (res.ok && !data.error) {
+        localStorage.setItem("user", JSON.stringify({ name: nameVal, email: emailVal }));
+        window.location.href = "dashboard.html";
+      } else {
+        if (msgEl) msgEl.innerText = data.message || data.error || "Signup failed";
+      }
+    } catch (err) {
+      if (msgEl) msgEl.innerText = "Network error";
+      console.error(err);
+    }
   });
 }
 
-if (document.getElementById("loginForm")) {
-  loginForm.addEventListener("submit", (e) => {
+/* LOGIN - post to backend */
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    let email = loginEmail.value;
-    localStorage.setItem("user", JSON.stringify({ name: "User", email }));
-    location.href = "dashboard.html";
+    const emailVal = document.getElementById("loginEmail")?.value || "";
+    const passVal = document.getElementById("loginPassword")?.value || "";
+    const msgEl = document.getElementById("loginMsg");
+
+    try {
+      const res = await fetch(`${BASE_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailVal, password: passVal })
+      });
+      if (res.ok) {
+        const user = await res.json();
+        localStorage.setItem("user", JSON.stringify({ name: user.name, email: user.email }));
+        window.location.href = "dashboard.html";
+      } else {
+        const data = await res.json();
+        if (msgEl) msgEl.innerText = data.error || "Invalid credentials";
+      }
+    } catch (err) {
+      if (msgEl) msgEl.innerText = "Network error";
+      console.error(err);
+    }
   });
 }
 
+/* DASHBOARD - safe DOM updates */
 if (location.pathname.includes("dashboard.html")) {
-  let u = JSON.parse(localStorage.getItem("user"));
-  if (!u) location.href = "login.html";
-  userName.innerText = u.name;
-  userEmail.innerText = u.email;
+  const u = JSON.parse(localStorage.getItem("user") || "null");
+  if (!u) {
+    location.href = "login.html";
+  } else {
+    const userNameEl = document.getElementById("userName");
+    const userEmailEl = document.getElementById("userEmail");
+    if (userNameEl) userNameEl.innerText = u.name;
+    if (userEmailEl) userEmailEl.innerText = u.email;
+  }
 }
 
 function logout() {
@@ -318,7 +379,7 @@ function logout() {
 
 function placeOrder() {
   // Check if user is logged in
-  let user = JSON.parse(localStorage.getItem("user"));
+  let user = JSON.parse(localStorage.getItem("user") || "null");
   if (!user) {
     alert("Please login before placing an order!");
     window.location.href = "login.html";
@@ -350,7 +411,6 @@ function placeOrder() {
   window.location.href = "orders.html";
 }
 
-
 function renderOrders() {
   const box = document.getElementById("orderList");
   if (!box) return;
@@ -370,14 +430,19 @@ function renderOrders() {
         <div class="order-title">${order.name}</div>
         <div class="order-price">₹${order.price} × ${order.quantity}</div>
         <div class="delivery-tag">Delivery in 6 days</div>
-        <button onclick="cancelOrder(${i})" class="order-btn cancel-btn">Cancel</button>
+        <div class="mt-2">
+          <button onclick="cancelOrder(${i})" class="order-btn cancel-btn">Cancel</button>
+          <button onclick="refundOrder(${i})" class="order-btn refund-btn">Refund</button>
+          <button onclick="exchangeOrder(${i})" class="order-btn exchange-btn">Exchange</button>
+        </div>
       </div>
     `;
   });
 }
 
 function cancelOrder(i) {
-  let orders = JSON.parse(localStorage.getItem("orders"));
+  let orders = JSON.parse(localStorage.getItem("orders") || "[]");
+  if (!orders[i]) return;
   orders.splice(i, 1);
   localStorage.setItem("orders", JSON.stringify(orders));
   renderOrders();
@@ -385,11 +450,23 @@ function cancelOrder(i) {
 
 if (location.pathname.includes("orders.html")) renderOrders();
 
+// =======================
+// Add missing helpers for refund/exchange
+// =======================
+function refundOrder(index) {
+  alert("Refund initiated! Amount will be returned in 3–5 days.");
+}
+
+function exchangeOrder(index) {
+  alert("Exchange request submitted!");
+}
+
 // ======================================================
 //  BACKEND FETCH
 // ======================================================
 
 const BASE_URL = "https://shop-backend-ewx9.onrender.com";
+
 
 fetch(`${BASE_URL}/getProducts`)
   .then(res => res.json())
@@ -405,16 +482,35 @@ fetch(`${BASE_URL}/getProducts`)
   .catch(err => console.error("Backend Error:", err));
 
 function addProduct() {
-  const name = pname.value, price = pprice.value, image = pimage.value;
+  const name = document.getElementById("pname")?.value;
+  const price = document.getElementById("pprice")?.value;
+  const image = document.getElementById("pimage")?.value;
 
-  if (!name || !price || !image) return alert("Fill all fields!");
+  if (!name || !price || !image) {
+    alert("Please fill all fields!");
+    return;
+  }
 
   fetch(`${BASE_URL}/addProduct`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, price, image })
   })
-    .then(r => r.json())
-    .then(msg => alert(msg.message || "Product added"))
-    .catch(console.error);
+    .then(res => res.json())
+    .then(result => {
+      alert(result.message || "Product added!");
+    })
+    .catch(err => console.error(err));
 }
+
+// Export handlers to window only if they exist (safe)
+if (typeof addToCart === "function") window.addToCart = addToCart;
+if (typeof addBackendToCart === "function") window.addBackendToCart = addBackendToCart;
+if (typeof increaseQty === "function") window.increaseQty = increaseQty;
+if (typeof decreaseQty === "function") window.decreaseQty = decreaseQty;
+if (typeof placeOrder === "function") window.placeOrder = placeOrder;
+if (typeof cancelOrder === "function") window.cancelOrder = cancelOrder;
+if (typeof refundOrder === "function") window.refundOrder = refundOrder;
+if (typeof exchangeOrder === "function") window.exchangeOrder = exchangeOrder;
+if (typeof logout === "function") window.logout = logout;
+if (typeof addProduct === "function") window.addProduct = addProduct;
