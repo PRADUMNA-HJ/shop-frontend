@@ -183,7 +183,7 @@ function backendProductCardHTML(p, index) {
 // ======================================================
 
 renderProductsLimited("productContainer", 3);
-renderProducts("allProducts");
+
 
 // ======================================================
 //  CART SYSTEM (LOCAL + BACKEND)
